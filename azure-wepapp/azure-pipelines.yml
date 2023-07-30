@@ -1,0 +1,28 @@
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: TerraformTaskV3@3
+    inputs:
+      provider: "azurerm"
+      command: "init"
+      backendServiceArm: "Pay-As-You-Go(91a7faa1-dc40-4598-ac09-d72f572c347a)"
+      backendAzureRmResourceGroupName: "resourcegroup-terraform"
+      backendAzureRmStorageAccountName: "terraformstoragetest9999"
+      backendAzureRmContainerName: "statefile"
+      backendAzureRmKey: "webapp.terraform.tfstate"
+
+  - task: TerraformTaskV3@3
+    inputs:
+      provider: "azurerm"
+      command: "validate"
+      
+  - task: TerraformTaskV3@3
+    inputs:
+      provider: 'azurerm'
+      command: 'apply'
+      commandOptions: '-auto-approve'
+      environmentServiceNameAzureRM: 'Pay-As-You-Go(91a7faa1-dc40-4598-ac09-d72f572c347a)'
