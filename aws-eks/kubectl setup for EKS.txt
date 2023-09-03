@@ -14,9 +14,10 @@ echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
+kubectl version --client --output=yaml
+
 aws eks --region us-east-1 describe-cluster --name demo-eks --query cluster.status
 
 aws eks --region us-east-1 update-kubeconfig --name demo-eks
 
 kubectl get nodes
-
