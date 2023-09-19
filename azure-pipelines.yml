@@ -16,8 +16,8 @@ steps:
 
 - task: SSH@0
   inputs:
-    runOptions: 'commands'
-    commands: 'ls'
+    runOptions: 'inline'
+    inline: 'ls'
     readyTimeout: '20000'
 
 - task: TerraformTaskV4@4
