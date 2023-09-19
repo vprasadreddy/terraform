@@ -19,8 +19,6 @@ steps:
   inputs:
     terraformVersion: 'latest'
 
-
-
 - task: TerraformTaskV4@4
   displayName: init
 
