@@ -10,11 +10,9 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: SSH@0
+- task: CmdLine@2
   inputs:
-    runOptions: 'inline'
-    inline: 'ls'
-    readyTimeout: '20000'
+    script: 'ls'
 - task: TerraformInstaller@1
   inputs:
     terraformVersion: 'latest'
