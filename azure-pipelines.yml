@@ -20,6 +20,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/azure-storage-account'
     backendServiceArm: 'Pay-As-You-Go (91a7faa1-dc40-4598-ac09-d72f572c347a)'
     backendAzureRmResourceGroupName: 'terraform-pipeline-rg'
     backendAzureRmStorageAccountName: 'tfstatestorage9999'
