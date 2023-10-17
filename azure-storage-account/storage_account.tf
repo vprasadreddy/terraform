@@ -6,6 +6,7 @@ resource "azurerm_storage_account" "terraformstoragetest9999" {
   account_replication_type = "LRS"
 
   tags = {
-    environment = "development"
+    environment = "development",
+    purpose     = "dev"
   }
 }
