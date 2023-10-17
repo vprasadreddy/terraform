@@ -4,51 +4,51 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+  - master
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: CmdLine@2
-  inputs:
-    script: 'ls'
-- task: TerraformInstaller@1
-  inputs:
-    terraformVersion: 'latest'
+  - task: CmdLine@2
+    inputs:
+      script: "ls"
+  - task: TerraformInstaller@1
+    inputs:
+      terraformVersion: "latest"
 
-- task: TerraformTaskV4@4
-  displayName: init
+  - task: TerraformTaskV4@4
+    displayName: init
 
-  inputs:
-    provider: 'azurerm'
-    command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/azure-storage-account'
-    backendServiceArm: 'Pay-As-You-Go (91a7faa1-dc40-4598-ac09-d72f572c347a)'
-    backendAzureRmResourceGroupName: 'terraform-pipeline-rg'
-    backendAzureRmStorageAccountName: 'tfstatestorage9999'
-    backendAzureRmContainerName: 'terraformstate'
-    backendAzureRmKey: 'dev.terraform.tfstate'
+    inputs:
+      provider: "azurerm"
+      command: "init"
+      workingDirectory: "$(System.DefaultWorkingDirectory)/azure-storage-account"
+      backendServiceArm: "Pay-As-You-Go (91a7faa1-dc40-4598-ac09-d72f572c347a)"
+      backendAzureRmResourceGroupName: "terraform-pipeline-rg"
+      backendAzureRmStorageAccountName: "tfstatestorage9999"
+      backendAzureRmContainerName: "terraformstate"
+      backendAzureRmKey: "dev.terraform.tfstate"
 
-- task: TerraformTaskV4@4
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/azure-storage-account'
-    environmentServiceNameAzureRM: 'Pay-As-You-Go (91a7faa1-dc40-4598-ac09-d72f572c347a)'
+  - task: TerraformTaskV4@4
+    inputs:
+      provider: "azurerm"
+      command: "plan"
+      workingDirectory: "$(System.DefaultWorkingDirectory)/azure-storage-account"
+      environmentServiceNameAzureRM: "Pay-As-You-Go (91a7faa1-dc40-4598-ac09-d72f572c347a)"
 
-- task: TerraformTaskV4@4
-  displayName: validate
-  inputs:
-    provider: 'azurerm'
-    command: 'validate'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/azure-storage-account'
+  - task: TerraformTaskV4@4
+    displayName: validate
+    inputs:
+      provider: "azurerm"
+      command: "validate"
+      workingDirectory: "$(System.DefaultWorkingDirectory)/azure-storage-account"
 
-- task: TerraformTaskV4@4
-  displayName: apply
-  inputs:
-    provider: 'azurerm'
-    command: 'apply'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/azure-storage-account'
-    commandOptions: '--auto-approve'
-    environmentServiceNameAzureRM: 'Pay-As-You-Go (91a7faa1-dc40-4598-ac09-d72f572c347a)'
+  - task: TerraformTaskV4@4
+    displayName: apply
+    inputs:
+      provider: "azurerm"
+      command: "apply"
+      workingDirectory: "$(System.DefaultWorkingDirectory)/azure-storage-account"
+      commandOptions: "--auto-approve"
+      environmentServiceNameAzureRM: "Pay-As-You-Go (91a7faa1-dc40-4598-ac09-d72f572c347a)"
