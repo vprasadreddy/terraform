@@ -12,6 +12,21 @@ provider "azurerm" {
   features {}
 }
 
+# Reference Azure Key Vault
+data "azurerm_key_vault" "terraform-keyvault2349" {
+  name                = "terraform-keyvault2349"
+  resource_group_name = "terraform-keyvault"
+}
+data "azurerm_key_vault_secret" "admin-password" {
+  name         = "admin-password"
+  key_vault_id = data.azurerm_key_vault.terraform-keyvault2349.id
+}
+
+data "azurerm_key_vault_secret" "admin-username" {
+  name         = "admin-username"
+  key_vault_id = data.azurerm_key_vault.terraform-keyvault2349.id
+}
+
 resource "azurerm_resource_group" "demo_rg" {
   name     = var.resource_group_name
   location = var.resource_group_location
@@ -98,8 +113,8 @@ resource "azurerm_windows_virtual_machine" "demo_vm" {
   resource_group_name = azurerm_resource_group.demo_rg.name
   location            = azurerm_resource_group.demo_rg.location
   size                = "Standard_B1s"
-  admin_username      = "adminuser"
-  admin_password      = "P@$$w0rd1234!"
+  admin_username      = data.azurerm_key_vault_secret.admin-username.value
+  admin_password      = data.azurerm_key_vault_secret.admin-password.value
   network_interface_ids = [
     azurerm_network_interface.demo_nic.id,
   ]
@@ -111,20 +126,20 @@ resource "azurerm_windows_virtual_machine" "demo_vm" {
   }
 
   //windows server
-  /*
+
   source_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
     sku       = "2016-Datacenter"
     version   = "latest"
   }
-*/
+
 
   //windows 11
-  source_image_reference {
+  /*   source_image_reference {
     publisher = "MicrosoftWindowsDesktop"
     offer     = "windows-11"
     sku       = "win11-22h2-pron"
     version   = "latest"
-  }
+  } */
 }
