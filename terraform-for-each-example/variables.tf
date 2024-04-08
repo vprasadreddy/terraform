@@ -28,3 +28,21 @@ variable "resources_list_of_objects" {
       model_format  = "OpenAI"
   }]
 }
+
+variable "resources_list_of_objects2" {
+  type = map(object({
+    deployment_id = string
+    model_name    = string
+    model_format  = string
+  }))
+  default = {
+    "deployment_1" = {
+      deployment_id = "gpt-3"
+      model_name    = "gpt-3"
+      model_format  = "OpenAI"
+    },
+    "deployment_2" = { deployment_id = "gpt-4"
+      model_name   = "gpt-4"
+      model_format = "OpenAI"
+  } }
+}

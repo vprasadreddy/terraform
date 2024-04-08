@@ -1,3 +1,7 @@
+### VSCode ###
+# Local .code-workspace
+*.code-workspace
+
 # Local .terraform directories
 **/.terraform/*
 
@@ -13,13 +17,12 @@
 *.DS_Store
 *.DS_Store.*
 
-
 # Crash log files
 crash.log
 
 # Exclude all .tfvars files, which are likely to contain sentitive data, such as
-# password, private keys, and other secrets. These should not be part of version 
-# control as they are data points which are potentially sensitive and subject 
+# password, private keys, and other secrets. These should not be part of version
+# control as they are data points which are potentially sensitive and subject
 # to change depending on the environment.
 #
 *.tfvars
