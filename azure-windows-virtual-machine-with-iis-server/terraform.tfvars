@@ -1,0 +1,6 @@
+resource_group_name     = "demo_rg"
+resource_group_location = "East US"
+vnet_name               = "demo-vnet"
+subnet_name             = "demo-subnet"
+vm_name                 = "demo-vm"
+nic_name                = "demo-nic"
