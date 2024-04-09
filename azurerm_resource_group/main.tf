@@ -5,6 +5,12 @@ terraform {
       version = "3.37.0"
     }
   }
+  backend "azurerm" {
+    resource_group_name  = "azure-with-mongodb_group"
+    storage_account_name = "azurewithmongodbgroa2d3"
+    container_name       = "terraformstate"
+    key                  = "dev.terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
