@@ -17,6 +17,8 @@ on:
   push:
     branches:
       - master
+    paths:
+      - .github/workflows/azure-terraform.yml
 
   # to trigger workflow on PRs
   pull_request:

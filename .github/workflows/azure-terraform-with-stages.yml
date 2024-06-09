@@ -14,9 +14,11 @@ on:
   workflow_dispatch:
 
   # to trigger workflow on code push
-  # push:
-  #   branches:
-  #     - master
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/azure-terraform-with-stages.yml
 
   # to trigger workflow on PRs
   # pull_request:
