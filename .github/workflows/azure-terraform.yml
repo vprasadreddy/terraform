@@ -16,7 +16,7 @@ on:
   # to trigger workflow on code push
   push:
     branches:
-      - main
+      - master
 
   # to trigger workflow on PRs
   pull_request:
