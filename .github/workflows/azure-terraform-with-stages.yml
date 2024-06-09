@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: terraform_github_action
+name: azure-terraform-with-stages
 
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -14,11 +14,11 @@ on:
   workflow_dispatch:
 
   # to trigger workflow on code push
-  push:
-    branches:
-      - master
-    paths:
-      - .github/workflows/azure-terraform-with-stages.yml
+  # push:
+  #   branches:
+  #     - master
+  #   paths:
+  #     - .github/workflows/azure-terraform-with-stages.yml
 
   # to trigger workflow on PRs
   # pull_request:
