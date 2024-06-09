@@ -100,6 +100,9 @@ jobs:
         working-directory: ./azurerm_resource_group
 
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
       - uses: hashicorp/setup-terraform@v3
 
       # Initialize Terraform
