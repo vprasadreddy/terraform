@@ -73,6 +73,11 @@ jobs:
           name: tfplan
           path: tfplan
 
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+
       # Create string output of Terraform Plan
       - name: Create String Output
         id: tf-plan-string
