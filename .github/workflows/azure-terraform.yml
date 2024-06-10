@@ -41,6 +41,11 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
 
+      # View files
+      - name: View files
+        run: |
+          ls -a
+
       - name: Terraform Init
         id: init
         run: |
@@ -55,6 +60,11 @@ jobs:
         id: plan
         run: terraform plan -out tfplan
         continue-on-error: false
+
+      # View files
+      - name: View files
+        run: |
+          ls -a
 
       # Save plan to artifacts
       - name: Publish Terraform Plan
@@ -86,10 +96,15 @@ jobs:
         run: |
           echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
 
+      # View files
+      - name: View files
+        run: |
+          ls -a
+
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
 
       # Terraform Apply
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
+      # - name: Terraform Apply
+      #   run: terraform apply -auto-approve
