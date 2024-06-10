@@ -41,7 +41,7 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
 
-      # View files
+      # View files before plan
       - name: View files
         run: |
           ls -a
@@ -61,7 +61,7 @@ jobs:
         run: terraform plan -out tfplan
         continue-on-error: false
 
-      # View files
+      # View files after plan
       - name: View files
         run: |
           ls -a
@@ -95,11 +95,6 @@ jobs:
           SUMMARY: ${{ steps.tf-plan-string.outputs.summary }}
         run: |
           echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
-
-      # View files
-      - name: View files
-        run: |
-          ls -a
 
       - name: Terraform Validate
         id: validate
