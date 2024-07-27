@@ -1,15 +1,11 @@
+variable "resource_groups" {
+  type    = list(string)
+  default = ["backend", "frontend", "database"]
+}
+
 variable "resources_list" {
   type    = list(string)
   default = ["ubuntu-vm", "windows-vm", "macos-vm"]
-}
-
-variable "resources_map" {
-  type = map(string)
-  default = {
-    "resource1" = "ubuntu-vm",
-    "resource2" = "windows-vm",
-    "resource3" = "macos-vm",
-  }
 }
 
 variable "resources_list_of_objects" {
@@ -43,6 +39,14 @@ variable "resources_list_of_objects" {
   }]
 }
 
+variable "resources_map" {
+  type = map(string)
+  default = {
+    "resource1" = "ubuntu-vm",
+    "resource2" = "windows-vm",
+    "resource3" = "macos-vm",
+  }
+}
 variable "resources_map_of_objects" {
   type = map(object({
     deployment_name = string

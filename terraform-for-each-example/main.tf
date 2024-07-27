@@ -1,19 +1,26 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "3.37.0"
-    }
-  }
+//create multiple resources using count
+resource "azurerm_resource_group" "resource_group_using_count" {
+  count    = length(var.resource_groups)
+  name     = "${var.resource_groups[count.index]}-rg"
+  location = "eastus"
 }
 
-
-provider "azurerm" {
-  features {
-  }
+output "resource_group_using_count_output" {
+  value = azurerm_resource_group.resource_group_using_count
 }
 
-resource "null_resource" "resources-list" {
+# Splat expression to get only id of the resource groups. 
+# The splat expression works only with count, lists, sets, and tuples.
+output "resource_group_using_count_output_ids" {
+  value = azurerm_resource_group.resource_group_using_count.*.id
+}
+
+output "resource_group_using_count_output_names" {
+  value = azurerm_resource_group.resource_group_using_count[*].name
+}
+
+//create multiple resources using List
+resource "null_resource" "resources_list" {
   for_each = toset(var.resources_list)
   triggers = {
     name = each.value
@@ -21,20 +28,10 @@ resource "null_resource" "resources-list" {
 }
 
 output "resources_list_output" {
-  value = null_resource.resources-list
+  value = null_resource.resources_list
 }
 
-
-resource "null_resource" "resources-map" {
-  for_each = var.resources_map
-  triggers = {
-    name = each.value
-  }
-}
-
-output "resources_map_output" {
-  value = null_resource.resources-map
-}
+//create multiple resources using list_of_objects
 
 resource "null_resource" "resources_list_of_objects" {
   for_each = { for resource in var.resources_list_of_objects : "${resource.deployment_name}" => resource }
@@ -60,6 +57,17 @@ output "conditional_resources_list_of_objects_output" {
   value = null_resource.conditional_resources_list_of_objects
 }
 
+//create multiple resources using map
+resource "null_resource" "resources_map" {
+  for_each = var.resources_map
+  triggers = {
+    name = each.value
+  }
+}
+
+output "resources_map_output" {
+  value = null_resource.resources_map
+}
 
 //create multiple resources using for_each with map_of_objects
 resource "null_resource" "resources_map_of_objects" {
