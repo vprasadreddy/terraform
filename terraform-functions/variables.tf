@@ -8,3 +8,14 @@ variable "networks" {
     }))
   }))
 }
+
+variable "networks2" {
+  type = map(object({
+    virtual_network_name = string
+    cidr_block           = string
+    subnets = map(object({
+      name       = string
+      cidr_block = string
+    }))
+  }))
+}
