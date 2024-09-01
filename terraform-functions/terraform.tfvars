@@ -44,13 +44,13 @@ networks2 = {
     cidr_block           = "10.1.0.0/16"
     subnets = {
       subnet_1 = {
-      name       = null
-      cidr_block = "10.1.0.1/16"
+        name       = null
+        cidr_block = "10.1.0.1/16"
       },
       subnet_2 = {
         name       = "email_server"
         cidr_block = "10.1.1.2/16"
-    }
+      }
     }
   },
   virtual_network_2 = {
@@ -58,12 +58,12 @@ networks2 = {
     cidr_block           = "10.1.2.0/16"
     subnets = {
       subnet_1 = {
-      name       = "firewall"
-      cidr_block = "10.1.2.1/16"
+        name       = "firewall"
+        cidr_block = "10.1.2.1/16"
       },
       subnet_2 = {
         name       = "db"
         cidr_block = "10.1.2.2/16"
-    }}
+    } }
   }
 }
