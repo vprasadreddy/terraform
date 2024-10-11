@@ -24,7 +24,7 @@ steps:
       provider: "azurerm"
       command: "init"
       workingDirectory: "$(System.DefaultWorkingDirectory)/azure-storage-account"
-      backendServiceArm: "Pay-As-You-Go (91a7faa1-dc40-4598-ac09-d72f572c347a)"
+      backendServiceArm: "Pay-As-You-Go"
       backendAzureRmResourceGroupName: "terraform-pipeline-rg"
       backendAzureRmStorageAccountName: "tfstatestorage9999"
       backendAzureRmContainerName: "terraformstate"
@@ -35,7 +35,7 @@ steps:
       provider: "azurerm"
       command: "plan"
       workingDirectory: "$(System.DefaultWorkingDirectory)/azure-storage-account"
-      environmentServiceNameAzureRM: "Pay-As-You-Go (91a7faa1-dc40-4598-ac09-d72f572c347a)"
+      environmentServiceNameAzureRM: "Pay-As-You-Go"
 
   - task: TerraformTaskV4@4
     displayName: validate
@@ -51,4 +51,4 @@ steps:
       command: "apply"
       workingDirectory: "$(System.DefaultWorkingDirectory)/azure-storage-account"
       commandOptions: "--auto-approve"
-      environmentServiceNameAzureRM: "Pay-As-You-Go (91a7faa1-dc40-4598-ac09-d72f572c347a)"
+      environmentServiceNameAzureRM: "Pay-As-You-Go"

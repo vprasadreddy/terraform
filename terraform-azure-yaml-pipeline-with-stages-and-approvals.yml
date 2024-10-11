@@ -1,0 +1,171 @@
+trigger:
+  - none
+
+parameters:
+  - name: modulePath
+    displayName: Enter module relative path to Deploy.
+    type: string
+  - name: env
+    type: string
+  - name: destroy_terraform_resources
+    type: boolean
+  - name: deployment_environment
+    displayName: Select an Environment to Deploy.
+    type: string
+    default: dev
+    values:
+      - dev
+      - test
+      - stage
+      - prod
+
+variables:
+  - group: ${{ parameters.deployment_environment }}
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: Terraform_Plan
+    displayName: "terraform plan"
+    jobs:
+      - job: Terraform_Plan_Job
+        displayName: Terraform Plan Job
+        steps:
+          - checkout: self
+
+          - task: TerraformInstaller@1
+            displayName: install terraform
+            inputs:
+              terraformVersion: "latest"
+
+          - task: ArchiveFiles@2
+            displayName: "Archive Files"
+            inputs:
+              rootFolderOrFile: "$(Build.SourcesDirectory)"
+              includeRootFolder: false
+              archiveType: "zip"
+              archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
+              replaceExistingArchive: true
+              verbose: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Terraform Files"
+            inputs:
+              PathtoPublish: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
+              ArtifactName: "$(Build.BuildId)-tfplan"
+              publishLocation: "Container"
+
+          - script: "terraform init"
+            workingDirectory: "$(System.DefaultWorkingDirectory)/${{ parameters.modulePath }}/"
+            displayName: "Terraform init"
+            enabled: true
+            env:
+              ARM_CLIENT_ID: $(azure_client_id)
+              ARM_CLIENT_SECRET: $(azure_client_secret)
+              ARM_SUBSCRIPTION_ID: $(azure_subscription_id)
+              ARM_TENANT_ID: $(azure_tenant_id)
+
+          - script: "terraform validate"
+            displayName: "Terraform Validate"
+            workingDirectory: "$(System.DefaultWorkingDirectory)/${{ parameters.modulePath }}/"
+            enabled: true
+            env:
+              ARM_CLIENT_ID: $(azure_client_id)
+              ARM_CLIENT_SECRET: $(azure_client_secret)
+              ARM_SUBSCRIPTION_ID: $(azure_subscription_id)
+              ARM_TENANT_ID: $(azure_tenant_id)
+
+          - script: 'terraform plan -var-file="terraform.tfvars"'
+            workingDirectory: "$(System.DefaultWorkingDirectory)/${{ parameters.modulePath }}/"
+            displayName: "Terraform plan"
+            enabled: true
+            env:
+              ARM_CLIENT_ID: $(azure_client_id)
+              ARM_CLIENT_SECRET: $(azure_client_secret)
+              ARM_SUBSCRIPTION_ID: $(azure_subscription_id)
+              ARM_TENANT_ID: $(azure_tenant_id)
+
+  - stage: Terraform_Apply
+    displayName: "terraform apply"
+    dependsOn: Terraform_Plan
+    jobs:
+      - deployment: Terraform_Apply
+        displayName: Terraform Apply Job
+        environment: ${{ parameters.deployment_environment }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadBuildArtifacts@0
+                  inputs:
+                    artifactName: "$(Build.BuildId)-tfplan"
+
+                - task: ExtractFiles@1
+                  inputs:
+                    archiveFilePatterns: "$(System.ArtifactsDirectory)/$(Build.BuildId)-tfplan/$(Build.BuildId).zip"
+                    destinationFolder: "$(System.DefaultWorkingDirectory)/"
+                    cleanDestinationFolder: false
+
+                - script: "terraform init"
+                  workingDirectory: "$(System.DefaultWorkingDirectory)/${{ parameters.modulePath }}/"
+                  displayName: "Terraform init"
+                  enabled: true
+                  env:
+                    ARM_CLIENT_ID: $(azure_client_id)
+                    ARM_CLIENT_SECRET: $(azure_client_secret)
+                    ARM_SUBSCRIPTION_ID: $(azure_subscription_id)
+                    ARM_TENANT_ID: $(azure_tenant_id)
+
+                - script: 'terraform apply --auto-approve -var-file="terraform.tfvars"'
+                  workingDirectory: "$(System.DefaultWorkingDirectory)/${{ parameters.modulePath }}/"
+                  displayName: "Terraform apply"
+                  enabled: true
+                  env:
+                    ARM_CLIENT_ID: $(azure_client_id)
+                    ARM_CLIENT_SECRET: $(azure_client_secret)
+                    ARM_SUBSCRIPTION_ID: $(azure_subscription_id)
+                    ARM_TENANT_ID: $(azure_tenant_id)
+
+  - stage: Terraform_Destroy
+    displayName: "terraform destroy - ${{ parameters.deployment_environment }}"
+    dependsOn: Terraform_Plan
+    condition: and(succeeded(), eq('${{ parameters.destroy_terraform_resources }}', 'true'))
+    jobs:
+      - deployment: Terraform_Destroy
+        displayName: Terraform Destroy Job
+        environment: ${{ parameters.deployment_environment }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadBuildArtifacts@0
+                  displayName: "Download Build Artifacts"
+                  inputs:
+                    artifactName: "$(Build.BuildId)-tfplan"
+
+                - task: ExtractFiles@1
+                  displayName: "Extract Terraform Configuration Files"
+                  inputs:
+                    archiveFilePatterns: "$(System.ArtifactsDirectory)/$(Build.BuildId)-tfplan/$(Build.BuildId).zip"
+                    destinationFolder: "$(System.DefaultWorkingDirectory)/"
+                    cleanDestinationFolder: false
+
+                - script: "terraform init"
+                  workingDirectory: "$(System.DefaultWorkingDirectory)/${{ parameters.modulePath }}/"
+                  displayName: "Terraform init"
+                  enabled: true
+                  env:
+                    ARM_CLIENT_ID: $(azure_client_id)
+                    ARM_CLIENT_SECRET: $(azure_client_secret)
+                    ARM_SUBSCRIPTION_ID: $(azure_subscription_id)
+                    ARM_TENANT_ID: $(azure_tenant_id)
+
+                - script: 'terraform destroy --auto-approve -var-file="terraform.tfvars"'
+                  workingDirectory: "$(System.DefaultWorkingDirectory)/${{ parameters.modulePath }}/"
+                  displayName: "Terraform Destroy"
+                  enabled: true
+                  env:
+                    ARM_CLIENT_ID: $(azure_client_id)
+                    ARM_CLIENT_SECRET: $(azure_client_secret)
+                    ARM_SUBSCRIPTION_ID: $(azure_subscription_id)
+                    ARM_TENANT_ID: $(azure_tenant_id)
